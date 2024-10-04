@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ClusterConfig
+metadata:
+  name: expense
+  lables:
+    name: expense
+    environment: dev
