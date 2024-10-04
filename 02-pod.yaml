@@ -3,6 +3,6 @@ appversion: v1
 metadata:
   name: nginx
 spec:
+  containers:
   -name: nginx
    image: ngnix
-   
