@@ -1,0 +1,8 @@
+kind: pod
+appversion: v1
+metadata:
+  name: nginx
+spec:
+  -name: nginx
+   image: ngnix
+   
