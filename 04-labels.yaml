@@ -1,7 +1,7 @@
 apiVersion: v1
-kind: pod
+kind: Pod
 metadata:
-  name: label 
+  name: labels
   labels:
     course: K8
     Trainer: Shivakumar
