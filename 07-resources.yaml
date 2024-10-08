@@ -1,0 +1,17 @@
+kind: Pod
+appversion: v1
+metadata: 
+  name: resource
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    resource:
+    #softlink
+      requests:
+        cpu: "68Mi"
+        memory: "128mi"
+      #limits shound be same atleast more than requests hardlink
+      limits:
+        cpu: "100m"
+        memory: "128mi"
