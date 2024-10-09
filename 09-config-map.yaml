@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: daw98s
+data:
+  course: "Devops with Aws"
+  trainer: "Hemanth"
+  githublink: "https://github.com/chethan2010/k8-resource"
