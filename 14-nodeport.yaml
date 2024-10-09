@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ngnix-np
+spec:
+type: NodePort
+  selector:
+    name: frontend
+    project: expense
+    componet: frontend
+    environment: dev
+ports:
+- protocol: TCP
+  port: 80 #load balancer
+  targetport: 80 #target port
+  nodePort: 32760 #k8 recommendation
