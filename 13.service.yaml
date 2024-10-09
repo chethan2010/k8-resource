@@ -8,8 +8,8 @@ spec:
     project: expense
     componet: frontend
     environment: dev
-spec:
-  continers:
-    name: nginx
-    image: nginx
+ports:
+- protocol: TCP
+  port: 80 #load balancer
+  targetport: 80 #target port
     
