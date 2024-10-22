@@ -6,8 +6,6 @@ spec:
   containers:
   - name: nginx
     image: nginx
-    env:
-    - name: Secreat-key 
-      valueFrom:
-        secretRef:
-          name: pod-secret
+    envFrom:
+    - secretRef:
+      name: pod-secret
