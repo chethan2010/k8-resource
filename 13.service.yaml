@@ -3,11 +3,11 @@ kind: Service
 metadata:
   name: nginx
 spec:
-  labels:
+  selector:
     name: frontend
     project: expense
     componet: frontend
-    environment: dev
+    environmen  t: dev
 ports:
 - protocol: TCP
   port: 80 #load balancer
