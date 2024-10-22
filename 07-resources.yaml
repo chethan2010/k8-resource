@@ -9,9 +9,9 @@ spec:
     resources:
     #softlink
       requests:
-        cpu: "68Mi"
-        memory: "128mi"
+        cpu: "68m"
+        memory: "128Mi"
       #limits shound be same atleast more than requests hardlink
       limits:
         cpu: "100m"
-        memory: "128mi"
+        memory: "128Mi"
