@@ -23,14 +23,4 @@ spec:
 
 
 
-  #   env:
-  # - name: course
-  #   valueFrom:
-  #     configMapkeyRef:
-  #       name: daw98s
-  #       key:  course
-  # - name: trainer
-  #   valueFrom:
-  #     configMapkeyRef:
-  #       name: daw98s
-  #       key:  trainer
+ 
