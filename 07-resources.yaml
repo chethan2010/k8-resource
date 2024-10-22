@@ -1,5 +1,5 @@
 kind: Pod
-appversion: v1
+apiVersion: v1
 metadata: 
   name: resources
 spec:
