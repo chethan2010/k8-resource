@@ -14,18 +14,18 @@ metadata:
   #this labels are related to dployment
   labels:
     component: backend
-    project: Expense
+    project: expense
     tier: app
   spec:
     replicas: 3
     selector:
       matchLabels:
         component: backend
-        project: Expense
+        project: expense
         tier: app
     templet:
       metadate:
-        lables:
+        labels:
           component: mysql
           project: backend
           tier: app
@@ -47,11 +47,11 @@ spec:
     project: expense
     componet: backend
     environment: dev
-ports:
-- protocol: TCP
-  port: 8080 #load balancer
-  targetport: 8080 #target port
-  
+  ports:
+  - protocol: TCP
+    port: 8080 #load balancer
+    targetport: 8080 #target port
+    
     
 
     

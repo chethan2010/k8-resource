@@ -1,45 +1,47 @@
-apiVersion: v1
 kind: Deployment
+apiVersion: apps/v1
 metadata:
   name: mysql
+  namespace: expense
   #this labels are related to dployment
   labels:
     component: mysql
-    project: Expense
+    project: expense
     tier: database
-  spec:
-    replicas: 3
-    selector:
-      matchLabels:
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      component: mysql
+      project: expense
+      tier: database
+  template: 
+    metadata:
+      labels:
         component: mysql
-        project: Expense
+        project: expense
         tier: database
-    templet:
-      metadate:
-        lables:
-          component: mysql
-          project: Expense
-          tier: database
-      spec: 
-        containers:
-          - name: mysql
-            image: joindevops/mysql:v1.0
+    spec: 
+      containers:
+      - name: mysql
+        image: joindevops/mysql:v1.0 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx
+  name: mysql
+  namespace: expense
 spec:
-  labels:
-    name: db
-    project: expense
-    componet: db
-    environment: dev
-ports:
-- protocol: TCP
-  port: 3306 #load balancer
-  targetport: 3306 #target port
+  selector:
+     component: mysql
+     project: expense
+     tier: database
+  ports:
+  - protocol: TCP
+    port: 3306 #load balancer
+    targetPort: 3306 #target port
   
+
     
 
     

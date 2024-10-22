@@ -1,7 +1,7 @@
 kind: Pod
 appversion: v1
 metadata: 
-  name: resource
+  name: resources
 spec:
   containers:
   - name: nginx

@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: ngnix-Dep
+  #this labels are related to dployment
+  labels:
+    app: nginx
+    purpose: deployment
+    tier: web-frontend  
+  spec:
+    replicas: 3
+    selector:
+      matchLabels:
+        app: nginx
+        tier: web
+        project: test-project
+    templet:
+      metadate:
+        lables:
+          app: nginx
+          tier: web
+          Project: some project
+      spec: 
+        containers:
+          - name: nginx
+            image: nginx
+
+
+    
+
+
+
