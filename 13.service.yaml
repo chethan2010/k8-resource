@@ -8,8 +8,8 @@ spec:
     project: expense
     componet: frontend
     environmen  t: dev
-ports:
-- protocol: TCP
-  port: 80 #load balancer
-  targetport: 80 #target port
+  ports:
+  - protocol: TCP
+    port: 80 #load balancer
+    targetport: 80 #target port
     
