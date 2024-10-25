@@ -12,5 +12,5 @@ spec:
   ports:
   - protocol: TCP
     port: 80 #load balancer
-    targetport: 80 #target port
+    targetPort: 80 #target port
     nodePort: 32760 #k8 recommendation
