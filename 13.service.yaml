@@ -7,7 +7,7 @@ spec:
     name: frontend
     project: expense
     componet: frontend
-    environmen  t: dev
+    environment: dev
   ports:
   - protocol: TCP
     port: 80 #load balancer
