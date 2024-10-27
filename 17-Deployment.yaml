@@ -19,7 +19,7 @@ spec:
       labels:
         app: nginx
         tier: web
-        Project: some project
+        Project: some-project
     spec: 
       containers:
       - name: nginx
