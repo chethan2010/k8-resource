@@ -19,7 +19,7 @@ spec:
       labels:
         app: nginx
         tier: web
-        Project: test-project
+        project: test-project
         extrakey: extra-value
     spec: 
       containers:
