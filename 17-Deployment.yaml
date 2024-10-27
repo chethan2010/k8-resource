@@ -16,7 +16,7 @@ spec:
       project: test-project
   template:
     metadata:
-      lables:
+      labels:
         app: nginx
         tier: web
         Project: some project
