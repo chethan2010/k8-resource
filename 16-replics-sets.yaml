@@ -6,19 +6,19 @@ metadata:
     app: nginx
     tier: frontend  
 spec:
-replicas: 3
-selector:
-  matchLabels:
-    tier: frontend
-    app: nginx
-    # below is pod definition
- template:
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: frontend
+      app: nginx
+      # below is pod definition
+  template:
     metadata:
       labels:
         tier: frontend
         app: nginx
         Project: some-project
-      spec:
-        containers:
-        - name: nginx
-          image: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx

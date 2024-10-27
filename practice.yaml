@@ -1,0 +1,25 @@
+apiversion: vi
+kind: ReplicaSet
+metadata:
+  name: nginx
+
+  labels:
+    app: nginx
+    tire: forntend
+spec:
+  replicas: 3
+  selector:
+    matchlabels:
+      app: nginx
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: front end
+        app: nginx
+        project: some-project
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+
