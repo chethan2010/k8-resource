@@ -1,25 +1,29 @@
-apiversion: vi
-kind: ReplicaSet
-metadata:
+kind: Deployment
+apiVersion: apps/v1
+metadata: 
   name: nginx
-
   labels:
     app: nginx
-    tire: forntend
-spec:
-  replicas: 3
-  selector:
-    matchlabels:
-      app: nginx
-      tier: frontend
-  template:
-    metadata:
-      labels:
-        tier: front end
+    purpose: Deployment
+    tier: web
+  spec:
+    replicas: 3
+    selector:
+      match labels:
         app: nginx
+        purpose: Deployment
+        tire: web
         project: some-project
-    spec:
-      containers:
-      - name: nginx
-        image: nginx
-
+    #pod defintion
+    templet:
+      metadata:
+        lables:
+          app: nginx
+          purpose: Deployment
+          tire: web
+          project: some-project
+      spec:
+        containers:
+        - name: nginx
+          image: nginx
+          

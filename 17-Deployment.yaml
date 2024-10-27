@@ -6,7 +6,7 @@ metadata:
   labels:
     app: nginx
     purpose: deployment
-    tier: web-frontend  
+    tier: web 
   spec:
     replicas: 3
     selector:
