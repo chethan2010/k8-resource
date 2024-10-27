@@ -7,23 +7,23 @@ metadata:
     app: nginx
     purpose: deployment
     tier: web 
-  spec:
-    replicas: 3
-    selector:
-      matchLabels:
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+      tier: web
+      project: test-project
+  templet:
+    metadate:
+      lables:
         app: nginx
         tier: web
-        project: test-project
-    templet:
-      metadate:
-        lables:
-          app: nginx
-          tier: web
-          Project: some project
-      spec: 
-        containers:
-        - name: nginx
-          image: nginx
+        Project: some project
+    spec: 
+      containers:
+      - name: nginx
+        image: nginx
 
 
     
