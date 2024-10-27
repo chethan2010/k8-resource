@@ -14,12 +14,12 @@ spec:
       app: nginx
       tier: web
       project: test-project
-  templet:
-    metadate:
-      lables:
-        app: nginx
-        tier: web
-        Project: some project
+    templet:
+      metadate:
+        lables:
+          app: nginx
+          tier: web
+          Project: some project
     spec: 
       containers:
       - name: nginx
