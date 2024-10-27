@@ -21,9 +21,9 @@ spec:
         tier: web
         Project: some project
     spec: 
-    containers:
-    - name: nginx
-      image: nginx
+      containers:
+      - name: nginx
+        image: nginx
 
 
     
