@@ -24,37 +24,37 @@ spec:
   resources:
     requests:
       storage: 5Gi
-# ---
-# apiVersion: v1
-# kind: Pod
-# metadata:
-#   name: ngnix
-#   labesl:
-#     purpose: ebs-Static
-#     project: expense
-# spec:
-#   containers:
-#   - name: nginx
-#     image: ngnix
-#     volumeMounts:
-#     - name: persistent-storage
-#       mountPath: /usr/share/ngnix/html
-#   volumes:
-#   - name: persistent-storage
-#     persistentVolumeClaim:
-#       claimName: ebs-claim
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: ngnix-lb
-# spec:
-# type: LoadBalancer
-#   selector:
-#     purpose: Ebs-Static
-#     project: expense
-# ports:
-# - protocol: TCP
-#   port: 80 #load balancer
-#   targetport: 80 #target port
-#   nodePort: 32761 #k8 recommendation
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ngnix
+  labesl:
+    purpose: ebs-Static
+    project: expense
+spec:
+  containers:
+  - name: nginx
+    image: ngnix
+    volumeMounts:
+    - name: persistent-storage
+      mountPath: /usr/share/ngnix/html
+  volumes:
+  - name: persistent-storage
+    persistentVolumeClaim:
+      claimName: ebs-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ngnix-lb
+spec:
+  type: LoadBalancer
+  selector:
+    purpose: Ebs-Static
+    project: expense
+ports:
+- protocol: TCP
+  port: 80 #load balancer
+  targetport: 80 #target port
+  nodePort: 32761 #k8 recommendation
