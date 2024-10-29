@@ -28,7 +28,7 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: ngnix
+  name: ngnix-static
   labels:
     purpose: ebs-static
     project: expense
@@ -51,10 +51,10 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    purpose: Ebs-Static
+    purpose: ebs-Static
     project: expense
   ports:
   - protocol: TCP
     port: 80 #load balancer
     targetPort: 80 #target port
-    nodePort: 32761 #k8 recommendation
+    
