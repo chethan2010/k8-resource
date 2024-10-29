@@ -29,11 +29,11 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: ngnix
-  labesl:
-    purpose: ebs-Static
+  labels:
+    purpose: ebs-static
     project: expense
 spec:
-  containers:
+  containars:
   - name: nginx
     image: ngnix
     volumeMounts:
@@ -56,5 +56,5 @@ spec:
 ports:
 - protocol: TCP
   port: 80 #load balancer
-  targetport: 80 #target port
+  targetPort: 80 #target port
   nodePort: 32761 #k8 recommendation
