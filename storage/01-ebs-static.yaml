@@ -53,8 +53,8 @@ spec:
   selector:
     purpose: Ebs-Static
     project: expense
-ports:
-- protocol: TCP
-  port: 80 #load balancer
-  targetPort: 80 #target port
-  nodePort: 32761 #k8 recommendation
+  ports:
+  - protocol: TCP
+    port: 80 #load balancer
+    targetPort: 80 #target port
+    nodePort: 32761 #k8 recommendation
