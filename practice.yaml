@@ -27,3 +27,6 @@ metadata:
         - name: nginx
           image: nginx
           
+
+  
+
