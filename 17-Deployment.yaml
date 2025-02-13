@@ -24,7 +24,7 @@ spec:
     spec: 
       containers:
       - name: nginx
-        image: stable-alpine3.20-perl
+        image: nginx:stable-alpine
 
 
     
