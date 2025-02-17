@@ -1,4 +1,0 @@
-apivesion: v1
-name: nginx
-version: 0.0.1
-description: this is the helm implementation of nginx
