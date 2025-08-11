@@ -37,8 +37,24 @@ usermod -aG docker ec2-user
 VALIDATE $? "Docker installation"
 
 # eksctl
-curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz" | tar xz -C /tmp
-mv /tmp/eksctl /usr/local/bin
+echo "Installing eksctl..."
+# Install prerequisites
+# sudo yum install -y curl tar
+# Download the latest eksctl for Linux AMD64
+curl -sL "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz" -o /tmp/eksctl.tar.gz
+# Extract to /tmp
+tar -xzf /tmp/eksctl.tar.gz -C /tmp
+
+# Move binary to /usr/local/bin
+sudo mv /tmp/eksctl /usr/local/bin/
+sudo chmod +x /usr/local/bin/eksctl
+
+# Ensure PATH contains /usr/local/bin
+if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
+    echo 'export PATH=$PATH:/usr/local/bin' >> ~/.bashrc
+    source ~/.bashrc
+fi
+# Verify installation
 eksctl version
 VALIDATE $? "eksctl installation"
 
