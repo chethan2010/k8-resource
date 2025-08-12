@@ -10,4 +10,4 @@ spec:
     - name: course
       value: 'kubernetes'
     - name: duration
-      value: '20 hours' 
+      value: '20 hours'

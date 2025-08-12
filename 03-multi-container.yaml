@@ -8,4 +8,16 @@ spec:
     image: nginx
   - name: alma 
     image: almalinux:9
-    command: ['sh', '-c', 'echo "Hello, Kubernetes!" && sleep 3600']
+    command: ['sh', '-c', 'echo "Hello, Kubernetes!" && sleep 3600'] 
+      
+
+
+
+
+
+
+
+
+
+
+
