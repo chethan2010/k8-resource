@@ -4,9 +4,8 @@ metadata:
   name: pod-config
 spec:
   containers:
-  - name: nginx
-    image: nginx
-    envFrom:
-      - configmapRef: 
-          name: daw98s
-      
+    - name: nginx
+      image: nginx
+      envFrom:
+        - configMapRef:
+            name: daw98s
