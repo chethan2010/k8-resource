@@ -5,7 +5,7 @@ resource "aws_instance" "db" {
     instance_type = "t3.micro"
 
     tags = {
-        Name = "db"
+        Name = "work-station"
     }
 }
 
