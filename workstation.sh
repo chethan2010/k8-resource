@@ -39,12 +39,11 @@ VALIDATE $? "Docker installation"
 # eksctl
 echo "Installing eksctl..."
 # Install prerequisites
-# sudo yum install -y curl tar
+sudo yum install -y curl tar
 # Download the latest eksctl for Linux AMD64
 curl -sL "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz" -o /tmp/eksctl.tar.gz
-# Extract to /tmp
 tar -xzf /tmp/eksctl.tar.gz -C /tmp
-
+# Extract to /tmp
 # Move binary to /usr/local/bin
 sudo mv /tmp/eksctl /usr/local/bin/
 sudo chmod +x /usr/local/bin/eksctl
