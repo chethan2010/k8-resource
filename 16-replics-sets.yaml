@@ -20,7 +20,7 @@ spec:
         tier: frontend
         Project: some-project
     spec:
-      containers:
+    containers:
         - name: nginx
           image: stable-perl
 
