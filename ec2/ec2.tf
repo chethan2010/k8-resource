@@ -1,6 +1,6 @@
 resource "aws_key_pair" "ssh_key" {
   key_name   = "ssh-agent-key"
-  public_key = file("C:/Users/hp/Desktop/ec2pem/ec2-Raj.pem") # Make sure this is the PUBLIC key
+#   public_key = file("C:/Users/hp/Desktop/ec2pem/ec2-Raj.pem") # Make sure this is the PUBLIC key
 }
 resource "aws_instance" "db" {
   ami                    = "ami-09c813fb71547fc4f"
