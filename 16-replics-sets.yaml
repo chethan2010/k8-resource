@@ -16,8 +16,8 @@ spec:
       # below is called pod definition
   template:
     metadata:
-        app: nginx
         tier: frontend
+        app: nginx
         Project: some-project
     spec:
       containers:

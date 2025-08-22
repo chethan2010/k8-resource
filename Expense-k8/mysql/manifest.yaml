@@ -13,9 +13,6 @@ spec:
   selector:
     matchLabels:
       component: mysql
-      project: expense
-      tier: database
-  template: 
     metadata:
       labels:
         component: mysql
@@ -24,7 +21,7 @@ spec:
     spec: 
       containers:
       - name: mysql
-        image: joindevops/mysql:v1.0 
+        image: chetan21dockerhub/mysql 
 ---
 apiVersion: v1
 kind: Service
@@ -40,7 +37,10 @@ spec:
   - protocol: TCP
     port: 3306 #load balancer
     targetPort: 3306 #target port
-  
+  #     project: expense
+  #     tier: database
+  # template: 
+
 
     
 
