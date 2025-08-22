@@ -1,21 +1,18 @@
 #!/bin/bash
+set -euo pipefail
 
-# Script setup
 USERID=$(id -u)
 TIMESTAMP=$(date +%F-%H-%M-%S)
-SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
+SCRIPT_NAME=$(basename "$0" | cut -d. -f1)
 LOGFILE=/tmp/$SCRIPT_NAME-$TIMESTAMP.log
 
-# Color codes
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
 
-# Redirect output to log file
 exec > >(tee -a $LOGFILE) 2>&1
 
-# Validation function
 VALIDATE() {
   if [ $1 -ne 0 ]; then
     echo -e "$2...$R FAILURE $N"
@@ -25,7 +22,6 @@ VALIDATE() {
   fi
 }
 
-# Check for root user
 if [ $USERID -ne 0 ]; then
   echo -e "$R Please run this script with root access. $N"
   exit 1
@@ -51,6 +47,7 @@ VALIDATE $? "Enabling Docker service"
 
 usermod -aG docker ec2-user
 VALIDATE $? "Adding ec2-user to Docker group"
+echo -e "$Y Please log out and back in for group changes to take effect. $N"
 
 echo -e "$Y ==== Installing eksctl ==== $N"
 yum install -y curl tar
@@ -76,16 +73,14 @@ fi
 VALIDATE $? "Verifying eksctl installation"
 
 echo -e "$Y ==== Installing kubectl ==== $N"
-curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.30.0/2024-05-12/bin/linux/amd64/kubectl
+curl -o /tmp/kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.30.0/2024-05-12/bin/linux/amd64/kubectl
 VALIDATE $? "Downloading kubectl"
 
-chmod +x ./kubectl
+chmod +x /tmp/kubectl
 VALIDATE $? "Making kubectl executable"
 
-mv kubectl /usr/local/bin/kubectl
+mv /tmp/kubectl /usr/local/bin/kubectl
 VALIDATE $? "Moving kubectl to /usr/local/bin"
-
-
 
 echo -e "$Y ==== Installing kubens ==== $N"
 yum install -y git
@@ -98,9 +93,12 @@ else
   echo -e "$Y /opt/kubectx already exists, skipping clone. $N"
 fi
 
-ln -sf /opt/kubectx/kubens /usr/local/bin/kubens
-VALIDATE $? "Linking kubens to /usr/local/bin"
-
+if [ ! -L /usr/local/bin/kubens ]; then
+  ln -s /opt/kubectx/kubens /usr/local/bin/kubens
+  VALIDATE $? "Linking kubens to /usr/local/bin"
+else
+  echo -e "$Y kubens link already exists, skipping $N"
+fi
 
 echo -e "$G ==== All installations completed successfully! ==== $N"
 
