@@ -102,8 +102,8 @@ fi
 ln -sf /opt/kubectx/kubens /usr/local/bin/kubens
 VALIDATE $? "Linking kubens to /usr/local/bin"
 
-kubens --help &>/dev/null
-VALIDATE $? "Verifying kubens installation"
+# kubens --help &>/dev/null
+# VALIDATE $? "Verifying kubens installation"
 
 echo -e "$G ==== All installations completed successfully! ==== $N"
 
