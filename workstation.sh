@@ -62,13 +62,17 @@ VALIDATE $? "Downloading eksctl"
 tar -xzf /tmp/eksctl.tar.gz -C /tmp
 VALIDATE $? "Extracting eksctl"
 
-mv /tmp/eksctl /usr/local/bin/
-VALIDATE $? "Moving eksctl to /usr/local/bin"
+if [ -f /tmp/eksctl ]; then
+  mv /tmp/eksctl /usr/local/bin/
+  VALIDATE $? "Moving eksctl to /usr/local/bin"
+  chmod +x /usr/local/bin/eksctl
+  VALIDATE $? "Making eksctl executable"
+else
+  echo -e "$R eksctl binary not found after extraction. $N"
+  exit 1
+fi
 
-chmod +x /usr/local/bin/eksctl
-VALIDATE $? "Making eksctl executable"
-
-eksctl version
+/usr/local/bin/eksctl version
 VALIDATE $? "Verifying eksctl installation"
 
 echo -e "$Y ==== Installing kubectl ==== $N"
