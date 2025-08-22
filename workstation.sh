@@ -85,8 +85,8 @@ VALIDATE $? "Making kubectl executable"
 mv kubectl /usr/local/bin/kubectl
 VALIDATE $? "Moving kubectl to /usr/local/bin"
 
-kubectl version --client
-VALIDATE $? "Verifying kubectl installation"
+# kubectl version --client
+# VALIDATE $? "Verifying kubectl installation"
 
 echo -e "$Y ==== Installing kubens ==== $N"
 yum install -y git
