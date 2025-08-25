@@ -13,8 +13,8 @@ spec:
     port: 80 #load balancer
     targetPort: 80 #target port
     
- labels:
-    name: frontend
-    project: expense
-    component: frontend
-    environment: dev
+  labels:
+      name: frontend
+      project: expense
+      component: frontend
+      environment: dev

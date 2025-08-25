@@ -10,7 +10,7 @@ spec:
   csi:
     driver: ebs.csi.aws.com
     fsType: ext4
-    volumeHandle: vol-054b71440f7788059
+    volumeHandle: vol-054b71440f7788059  ##Pv represents that volume created
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

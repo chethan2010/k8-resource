@@ -29,78 +29,136 @@ else
   echo -e "$G You are super user. $N"
 fi
 
-echo -e "$Y ==== Installing Docker ==== $N"
-yum install -y yum-utils
-VALIDATE $? "Installing yum-utils"
+#####################################
+# Docker Installation
+#####################################
+if ! command -v docker &>/dev/null; then
+  echo -e "$Y ==== Installing Docker ==== $N"
 
-yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-VALIDATE $? "Adding Docker repo"
+  yum install -y yum-utils
+  VALIDATE $? "Installing yum-utils"
 
-yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
-VALIDATE $? "Installing Docker packages"
+  yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  VALIDATE $? "Adding Docker repo"
 
-systemctl start docker
-VALIDATE $? "Starting Docker service"
+  yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+  VALIDATE $? "Installing Docker packages"
 
-systemctl enable docker
-VALIDATE $? "Enabling Docker service"
+  systemctl start docker
+  VALIDATE $? "Starting Docker service"
 
-usermod -aG docker ec2-user
-VALIDATE $? "Adding ec2-user to Docker group"
-echo -e "$Y Please log out and back in for group changes to take effect. $N"
+  systemctl enable docker
+  VALIDATE $? "Enabling Docker service"
 
-echo -e "$Y ==== Installing eksctl ==== $N"
-yum install -y curl tar
-VALIDATE $? "Installing curl and tar"
-
-curl -sL "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz" -o /tmp/eksctl.tar.gz
-VALIDATE $? "Downloading eksctl"
-
-tar -xzf /tmp/eksctl.tar.gz -C /tmp
-VALIDATE $? "Extracting eksctl"
-
-if [ -f /tmp/eksctl ]; then
-  mv /tmp/eksctl /usr/local/bin/
-  VALIDATE $? "Moving eksctl to /usr/local/bin"
-  chmod +x /usr/local/bin/eksctl
-  VALIDATE $? "Making eksctl executable"
+  usermod -aG docker ec2-user
+  VALIDATE $? "Adding ec2-user to Docker group"
+  echo -e "$Y Please log out and back in for group changes to take effect. $N"
 else
-  echo -e "$R eksctl binary not found after extraction. $N"
-  exit 1
+  echo -e "$G Docker already installed, skipping. $N"
 fi
 
-/usr/local/bin/eksctl version
-VALIDATE $? "Verifying eksctl installation"
+#####################################
+# eksctl Installation
+#####################################
+if ! command -v eksctl &>/dev/null; then
+  echo -e "$Y ==== Installing eksctl ==== $N"
 
-echo -e "$Y ==== Installing kubectl ==== $N"
-curl -o /tmp/kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.30.0/2024-05-12/bin/linux/amd64/kubectl
-VALIDATE $? "Downloading kubectl"
+  yum install -y curl tar
+  VALIDATE $? "Installing curl and tar"
 
-chmod +x /tmp/kubectl
-VALIDATE $? "Making kubectl executable"
+  ARCH=$(uname -m)
+  if [ "$ARCH" == "x86_64" ]; then
+    PLATFORM="amd64"
+  elif [ "$ARCH" == "aarch64" ]; then
+    PLATFORM="arm64"
+  else
+    echo -e "$R Unsupported architecture: $ARCH $N"
+    exit 1
+  fi
 
-mv /tmp/kubectl /usr/local/bin/kubectl
-VALIDATE $? "Moving kubectl to /usr/local/bin"
+  curl -sL "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Linux_${PLATFORM}.tar.gz" -o /tmp/eksctl.tar.gz
+  VALIDATE $? "Downloading eksctl"
 
-echo -e "$Y ==== Installing kubens ==== $N"
-yum install -y git
-VALIDATE $? "Installing git"
+  tar -xzf /tmp/eksctl.tar.gz -C /tmp
+  VALIDATE $? "Extracting eksctl"
 
-if [ ! -d "/opt/kubectx" ]; then
-  git clone https://github.com/ahmetb/kubectx /opt/kubectx
-  VALIDATE $? "Cloning kubectx repository"
+  EKSCTL_PATH=$(find /tmp -type f -name eksctl | head -n 1)
+  if [ -f "$EKSCTL_PATH" ]; then
+    mv "$EKSCTL_PATH" /usr/local/bin/eksctl
+    VALIDATE $? "Moving eksctl to /usr/local/bin"
+    chmod +x /usr/local/bin/eksctl
+    VALIDATE $? "Making eksctl executable"
+  else
+    echo -e "$R eksctl binary not found after extraction. $N"
+    exit 1
+  fi
 else
-  echo -e "$Y /opt/kubectx already exists, skipping clone. $N"
+  echo -e "$G eksctl already installed, skipping. $N"
 fi
 
-if [ ! -L /usr/local/bin/kubens ]; then
-  ln -s /opt/kubectx/kubens /usr/local/bin/kubens
+#####################################
+# kubectl Installation
+#####################################
+if ! command -v kubectl &>/dev/null; then
+  echo -e "$Y ==== Installing kubectl ==== $N"
+
+  ARCH=$(uname -m)
+  if [ "$ARCH" == "x86_64" ]; then
+    PLATFORM="amd64"
+  elif [ "$ARCH" == "aarch64" ]; then
+    PLATFORM="arm64"
+  else
+    echo -e "$R Unsupported architecture: $ARCH $N"
+    exit 1
+  fi
+
+  curl -o /tmp/kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.30.0/2024-05-12/bin/linux/${PLATFORM}/kubectl
+  VALIDATE $? "Downloading kubectl"
+
+  chmod +x /tmp/kubectl
+  VALIDATE $? "Making kubectl executable"
+
+  mv /tmp/kubectl /usr/local/bin/kubectl
+  VALIDATE $? "Moving kubectl to /usr/local/bin"
+else
+  echo -e "$G kubectl already installed, skipping. $N"
+fi
+
+#####################################
+# kubens Installation
+#####################################
+if ! command -v kubens &>/dev/null; then
+  echo -e "$Y ==== Installing kubens ==== $N"
+  yum install -y git
+  VALIDATE $? "Installing git"
+
+  if [ ! -d "/opt/kubectx" ]; then
+    git clone https://github.com/ahmetb/kubectx /opt/kubectx
+    VALIDATE $? "Cloning kubectx repository"
+  else
+    echo -e "$Y /opt/kubectx already exists, skipping clone. $N"
+  fi
+
+  ln -sf /opt/kubectx/kubens /usr/local/bin/kubens
   VALIDATE $? "Linking kubens to /usr/local/bin"
 else
-  echo -e "$Y kubens link already exists, skipping $N"
+  echo -e "$G kubens already installed, skipping. $N"
 fi
 
+#####################################
+# PATH fix
+#####################################
+if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
+  echo 'export PATH=$PATH:/usr/local/bin' >> ~/.bashrc
+  export PATH=$PATH:/usr/local/bin
+  echo -e "$G Added /usr/local/bin to PATH $N"
+fi
+
+#####################################
 echo -e "$G ==== All installations completed successfully! ==== $N"
+eksctl version
+kubectl version 
+kubens --help | head -n 2
 
 
 # # Helm
