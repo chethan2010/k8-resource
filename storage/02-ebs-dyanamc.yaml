@@ -1,7 +1,43 @@
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
+apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
-  name: expense-ebs
-reclaimPolicy: Retain
-provisioner: ebs.csi.aws.com
-volumeBindingMode: WaitForFirstConsumer
+  name: expense-dynamic
+spec:
+  storageClassName: "expense-ebs"   # must match PV
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-static
+  labels:
+    purpose: ebs-static
+    project: expense
+spec:
+  containers:
+  - name: nginx
+    image: nginx-dynamic        
+    volumeMounts:
+    - name: persistent-storage
+      mountPath: /usr/share/nginx/html   # fixed typo
+  # remove this if nodes are not in us-east-1d
+  nodeSelector:    
+    topology.kubernetes.io/zone: us-east-1d
+  volumes:
+  - name: persistent-storage
+    persistentVolumeClaim:
+      claimName: expense-edbbs
+
+
+# to install drives
+# eksctl create addon \
+#   --name aws-ebs-csi-driver \
+#   --cluster expense-1 \
+#   --region us-east-1 \
+#   --force
