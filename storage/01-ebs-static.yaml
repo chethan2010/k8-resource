@@ -10,7 +10,7 @@ spec:
   csi:
     driver: ebs.csi.aws.com
     fsType: ext4
-    volumeHandle: vol-054b71440f7788059  ##Pv represents that volume created
+    volumeHandle: vol-092e317fb0e36df2e  ##Pv represents that volume created
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -38,9 +38,9 @@ spec:
     image: nginx
     volumeMounts:
     - name: persistent-storage
-      mountPath: /usr/share/ngnix/html
+      mountPath: /usr/share/nginx/html
   nodeSelector:    
-    topology.kubernetes.io/zone: us-east-1d
+    topology.kubernetes.io/zone: us-east-1a
   volumes:
   - name: persistent-storage
     persistentVolumeClaim:
@@ -53,7 +53,7 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    purpose: ebs-Static
+    purpose: ebs-static
     project: expense
   ports:
   - protocol: TCP
