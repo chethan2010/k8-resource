@@ -9,6 +9,8 @@ spec:
   - name: nginx
     image: nginx
     imagePullPolicy: always   #keep this always
+  nodeselector:
+    project: expense
   tolerations:
   - key: "example-key"
     operator: "Exists"
