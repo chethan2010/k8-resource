@@ -41,7 +41,7 @@ metadata:
   name: pod-3
   labels:
   name: pod-3
-  purpose: affinity
+  purpose: Affinity
 spec:
 affinity:
     podAntiAffinityAffinity:
@@ -52,7 +52,7 @@ affinity:
             operator: In
             values:
             - pod-1
-        topologyKey: topology.kubernetes.io/zone
+        topologyKey: "kubernetes.io/hostname"
 
     containers:
     - name: nginx
