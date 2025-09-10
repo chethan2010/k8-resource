@@ -11,7 +11,7 @@ G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
 
-exec > >(tee -a $LOGFILE) 2>&1
+exec > >(tee -a "$LOGFILE") 2>&1
 
 VALIDATE() {
   if [ $1 -ne 0 ]; then
@@ -85,9 +85,8 @@ if ! command -v eksctl &>/dev/null; then
   EKSCTL_PATH=$(find /tmp -type f -name eksctl | head -n 1)
   if [ -f "$EKSCTL_PATH" ]; then
     mv "$EKSCTL_PATH" /usr/local/bin/eksctl
-    VALIDATE $? "Moving eksctl to /usr/local/bin"
     chmod +x /usr/local/bin/eksctl
-    VALIDATE $? "Making eksctl executable"
+    VALIDATE $? "Installing eksctl"
   else
     echo -e "$R eksctl binary not found after extraction. $N"
     exit 1
@@ -116,34 +115,51 @@ if ! command -v kubectl &>/dev/null; then
   VALIDATE $? "Downloading kubectl"
 
   chmod +x /tmp/kubectl
-  VALIDATE $? "Making kubectl executable"
-
   mv /tmp/kubectl /usr/local/bin/kubectl
-  VALIDATE $? "Moving kubectl to /usr/local/bin"
+  VALIDATE $? "Installing kubectl"
 else
   echo -e "$G kubectl already installed, skipping. $N"
 fi
 
-# #####################################
-# # kubens Installation
-# #####################################
-# if ! command -v kubens &>/dev/null; then
-#   echo -e "$Y ==== Installing kubens ==== $N"
-#   yum install -y git
-#   VALIDATE $? "Installing git"
+#####################################
+# kubens Installation
+#####################################
+if ! command -v kubens &>/dev/null; then
+  echo -e "$Y ==== Installing kubens ==== $N"
 
-#   if [ ! -d "/opt/kubectx" ]; then
-#     git clone https://github.com/ahmetb/kubectx /opt/kubectx
-#     VALIDATE $? "Cloning kubectx repository"
-#   else
-#     echo -e "$Y /opt/kubectx already exists, skipping clone. $N"
-#   fi
+  yum install -y git
+  VALIDATE $? "Installing git"
 
-#   ln -sf /opt/kubectx/kubens /usr/local/bin/kubens
-#   VALIDATE $? "Linking kubens to /usr/local/bin"
-# else
-#   echo -e "$G kubens already installed, skipping. $N"
-# fi
+  if [ ! -d "/opt/kubectx" ]; then
+    git clone https://github.com/ahmetb/kubectx /opt/kubectx
+    VALIDATE $? "Cloning kubectx repository"
+  else
+    echo -e "$Y /opt/kubectx already exists, skipping clone. $N"
+  fi
+
+  ln -sf /opt/kubectx/kubens /usr/local/bin/kubens
+  VALIDATE $? "Linking kubens to /usr/local/bin"
+else
+  echo -e "$G kubens already installed, skipping. $N"
+fi
+
+#####################################
+# Helm Installation
+#####################################
+if ! command -v helm &>/dev/null; then
+  echo -e "$Y ==== Installing Helm ==== $N"
+
+  curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+  VALIDATE $? "Downloading Helm install script"
+
+  chmod 700 get_helm.sh
+  ./get_helm.sh
+  VALIDATE $? "Installing Helm"
+
+  rm -f get_helm.sh
+else
+  echo -e "$G Helm already installed, skipping. $N"
+fi
 
 #####################################
 # PATH fix
@@ -155,14 +171,21 @@ if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
 fi
 
 #####################################
-# echo -e "$G ==== All installations completed successfully! ==== $N"
-# eksctl version
-# kubectl version 
-# kubens --help | head -n 2
+# Final Check and Version Outputs
+#####################################
+echo -e "$G ==== All installations completed successfully! ==== $N"
 
+echo -e "$Y Docker Version: $N"
+docker --version || echo -e "$R Docker not available in this shell. Try re-logging. $N"
 
-# # Helm
-# curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-# chmod 700 get_helm.sh
-# ./get_helm.sh
-# VALIDATE $? "helm installation"
+echo -e "$Y eksctl Version: $N"
+eksctl version || echo -e "$R eksctl not found. $N"
+
+echo -e "$Y kubectl Version: $N"
+kubectl version --client || echo -e "$R kubectl not found. $N"
+
+echo -e "$Y kubens Version: $N"
+kubens --help | head -n 2 || echo -e "$R kubens not found. $N"
+
+echo -e "$Y Helm Version: $N"
+helm version || echo -e "$R helm not found. $N"
