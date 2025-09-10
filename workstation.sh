@@ -124,26 +124,26 @@ else
   echo -e "$G kubectl already installed, skipping. $N"
 fi
 
-#####################################
-# kubens Installation
-#####################################
-if ! command -v kubens &>/dev/null; then
-  echo -e "$Y ==== Installing kubens ==== $N"
-  yum install -y git
-  VALIDATE $? "Installing git"
+# #####################################
+# # kubens Installation
+# #####################################
+# if ! command -v kubens &>/dev/null; then
+#   echo -e "$Y ==== Installing kubens ==== $N"
+#   yum install -y git
+#   VALIDATE $? "Installing git"
 
-  if [ ! -d "/opt/kubectx" ]; then
-    git clone https://github.com/ahmetb/kubectx /opt/kubectx
-    VALIDATE $? "Cloning kubectx repository"
-  else
-    echo -e "$Y /opt/kubectx already exists, skipping clone. $N"
-  fi
+#   if [ ! -d "/opt/kubectx" ]; then
+#     git clone https://github.com/ahmetb/kubectx /opt/kubectx
+#     VALIDATE $? "Cloning kubectx repository"
+#   else
+#     echo -e "$Y /opt/kubectx already exists, skipping clone. $N"
+#   fi
 
-  ln -sf /opt/kubectx/kubens /usr/local/bin/kubens
-  VALIDATE $? "Linking kubens to /usr/local/bin"
-else
-  echo -e "$G kubens already installed, skipping. $N"
-fi
+#   ln -sf /opt/kubectx/kubens /usr/local/bin/kubens
+#   VALIDATE $? "Linking kubens to /usr/local/bin"
+# else
+#   echo -e "$G kubens already installed, skipping. $N"
+# fi
 
 #####################################
 # PATH fix
@@ -155,10 +155,10 @@ if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
 fi
 
 #####################################
-echo -e "$G ==== All installations completed successfully! ==== $N"
-eksctl version
-kubectl version 
-kubens --help | head -n 2
+# echo -e "$G ==== All installations completed successfully! ==== $N"
+# eksctl version
+# kubectl version 
+# kubens --help | head -n 2
 
 
 # # Helm
