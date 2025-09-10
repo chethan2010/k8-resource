@@ -124,42 +124,42 @@ fi
 #####################################
 # kubens Installation
 #####################################
-if ! command -v kubens &>/dev/null; then
-  echo -e "$Y ==== Installing kubens ==== $N"
+# if ! command -v kubens &>/dev/null; then
+#   echo -e "$Y ==== Installing kubens ==== $N"
 
-  yum install -y git
-  VALIDATE $? "Installing git"
+#   yum install -y git
+#   VALIDATE $? "Installing git"
 
-  if [ ! -d "/opt/kubectx" ]; then
-    git clone https://github.com/ahmetb/kubectx /opt/kubectx
-    VALIDATE $? "Cloning kubectx repository"
-  else
-    echo -e "$Y /opt/kubectx already exists, skipping clone. $N"
-  fi
+#   if [ ! -d "/opt/kubectx" ]; then
+#     git clone https://github.com/ahmetb/kubectx /opt/kubectx
+#     VALIDATE $? "Cloning kubectx repository"
+#   else
+#     echo -e "$Y /opt/kubectx already exists, skipping clone. $N"
+#   fi
 
-  ln -sf /opt/kubectx/kubens /usr/local/bin/kubens
-  VALIDATE $? "Linking kubens to /usr/local/bin"
-else
-  echo -e "$G kubens already installed, skipping. $N"
-fi
+#   ln -sf /opt/kubectx/kubens /usr/local/bin/kubens
+#   VALIDATE $? "Linking kubens to /usr/local/bin"
+# else
+#   echo -e "$G kubens already installed, skipping. $N"
+# fi
 
 #####################################
 # Helm Installation
 #####################################
-if ! command -v helm &>/dev/null; then
-  echo -e "$Y ==== Installing Helm ==== $N"
+# if ! command -v helm &>/dev/null; then
+#   echo -e "$Y ==== Installing Helm ==== $N"
 
-  curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-  VALIDATE $? "Downloading Helm install script"
+#   curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+#   VALIDATE $? "Downloading Helm install script"
 
-  chmod 700 get_helm.sh
-  ./get_helm.sh
-  VALIDATE $? "Installing Helm"
+#   chmod 700 get_helm.sh
+#   ./get_helm.sh
+#   VALIDATE $? "Installing Helm"
 
-  rm -f get_helm.sh
-else
-  echo -e "$G Helm already installed, skipping. $N"
-fi
+#   rm -f get_helm.sh
+# else
+#   echo -e "$G Helm already installed, skipping. $N"
+# fi
 
 #####################################
 # PATH fix
@@ -184,8 +184,8 @@ eksctl version || echo -e "$R eksctl not found. $N"
 echo -e "$Y kubectl Version: $N"
 kubectl version --client || echo -e "$R kubectl not found. $N"
 
-echo -e "$Y kubens Version: $N"
-kubens --help | head -n 2 || echo -e "$R kubens not found. $N"
+# echo -e "$Y kubens Version: $N"
+# kubens --help | head -n 2 || echo -e "$R kubens not found. $N"
 
-echo -e "$Y Helm Version: $N"
-helm version || echo -e "$R helm not found. $N"
+# echo -e "$Y Helm Version: $N"
+# helm version || echo -e "$R helm not found. $N"
