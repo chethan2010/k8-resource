@@ -60,31 +60,34 @@ fi
 #####################################
 # eksctl Installation
 #####################################
-if ! command -v eksctl &>/dev/null; then
-  echo -e "$Y ==== Installing eksctl ==== $N"
+echo -e "$Y ==== Installing eksctl ==== $N"
 
-  yum install -y curl tar
-  VALIDATE $? "Installing curl and tar"
+yum install -y curl tar
+VALIDATE $? "Installing curl and tar"
 
-  ARCH=$(uname -m)
-  if [ "$ARCH" == "x86_64" ]; then
-    PLATFORM="amd64"
-  elif [ "$ARCH" == "aarch64" ]; then
-    PLATFORM="arm64"
-  else
-    echo -e "$R Unsupported architecture: $ARCH $N"
-    exit 1
-  fi
-
-  curl -sL "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Linux_${PLATFORM}.tar.gz" -o /tmp/eksctl.tar.gz
-  VALIDATE $? "Downloading eksctl"
-
-  tar -xzf /tmp/eksctl.tar.gz -C /usr/local/bin
-  chmod +x /usr/local/bin/eksctl
-  VALIDATE $? "Installing eksctl"
+ARCH=$(uname -m)
+if [ "$ARCH" == "x86_64" ]; then
+  PLATFORM="amd64"
+elif [ "$ARCH" == "aarch64" ]; then
+  PLATFORM="arm64"
 else
-  echo -e "$G eksctl already installed, skipping. $N"
+  echo -e "$R Unsupported architecture: $ARCH $N"
+  exit 1
 fi
+
+# Get latest version
+EKSCTL_LATEST=$(curl -s https://api.github.com/repos/eksctl-io/eksctl/releases/latest | grep tag_name | cut -d '"' -f4)
+VALIDATE $? "Fetching latest eksctl version"
+
+curl -sL "https://github.com/eksctl-io/eksctl/releases/download/${EKSCTL_LATEST}/eksctl_Linux_${PLATFORM}.tar.gz" -o /tmp/eksctl.tar.gz
+VALIDATE $? "Downloading eksctl ${EKSCTL_LATEST}"
+
+tar -xzf /tmp/eksctl.tar.gz -C /tmp
+VALIDATE $? "Extracting eksctl"
+
+mv /tmp/eksctl /usr/local/bin/eksctl
+chmod +x /usr/local/bin/eksctl
+VALIDATE $? "Installing eksctl"
 
 #####################################
 # kubectl Installation
