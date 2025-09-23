@@ -79,18 +79,9 @@ if ! command -v eksctl &>/dev/null; then
   curl -sL "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Linux_${PLATFORM}.tar.gz" -o /tmp/eksctl.tar.gz
   VALIDATE $? "Downloading eksctl"
 
-  tar -xzf /tmp/eksctl.tar.gz -C /tmp
-  VALIDATE $? "Extracting eksctl"
-
-  EKSCTL_PATH=$(find /tmp -type f -name eksctl | head -n 1)
-  if [ -f "$EKSCTL_PATH" ]; then
-    mv "$EKSCTL_PATH" /usr/local/bin/eksctl
-    chmod +x /usr/local/bin/eksctl
-    VALIDATE $? "Installing eksctl"
-  else
-    echo -e "$R eksctl binary not found after extraction. $N"
-    exit 1
-  fi
+  tar -xzf /tmp/eksctl.tar.gz -C /usr/local/bin
+  chmod +x /usr/local/bin/eksctl
+  VALIDATE $? "Installing eksctl"
 else
   echo -e "$G eksctl already installed, skipping. $N"
 fi
@@ -111,78 +102,38 @@ if ! command -v kubectl &>/dev/null; then
     exit 1
   fi
 
-  curl -o /tmp/kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.30.0/2024-05-12/bin/linux/${PLATFORM}/kubectl
+  curl -o /usr/local/bin/kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.30.0/2024-05-12/bin/linux/${PLATFORM}/kubectl
   VALIDATE $? "Downloading kubectl"
 
-  chmod +x /tmp/kubectl
-  mv /tmp/kubectl /usr/local/bin/kubectl
+  chmod +x /usr/local/bin/kubectl
   VALIDATE $? "Installing kubectl"
 else
   echo -e "$G kubectl already installed, skipping. $N"
 fi
 
 #####################################
-# kubens Installation
+# Add /usr/local/bin to PATH for ec2-user and root
 #####################################
-# if ! command -v kubens &>/dev/null; then
-#   echo -e "$Y ==== Installing kubens ==== $N"
+for USER_HOME in /root /home/ec2-user; do
+  if ! grep -q "/usr/local/bin" "$USER_HOME/.bashrc"; then
+    echo 'export PATH=$PATH:/usr/local/bin' >> "$USER_HOME/.bashrc"
+    echo -e "$G Added /usr/local/bin to PATH for $USER_HOME $N"
+  fi
+done
 
-#   yum install -y git
-#   VALIDATE $? "Installing git"
+# #####################################
+# # Final Check and Version Outputs
+# #####################################
+# echo -e "$G ==== All installations completed successfully! ==== $N"
 
-#   if [ ! -d "/opt/kubectx" ]; then
-#     git clone https://github.com/ahmetb/kubectx /opt/kubectx
-#     VALIDATE $? "Cloning kubectx repository"
-#   else
-#     echo -e "$Y /opt/kubectx already exists, skipping clone. $N"
-#   fi
+# echo -e "$Y Docker Version: $N"
+# docker --version || echo -e "$R Docker not available in this shell. Try re-logging. $N"
 
-#   ln -sf /opt/kubectx/kubens /usr/local/bin/kubens
-#   VALIDATE $? "Linking kubens to /usr/local/bin"
-# else
-#   echo -e "$G kubens already installed, skipping. $N"
-# fi
+# echo -e "$Y eksctl Version: $N"
+# eksctl version || echo -e "$R eksctl not found. $N"
 
-#####################################
-# Helm Installation
-#####################################
-# if ! command -v helm &>/dev/null; then
-#   echo -e "$Y ==== Installing Helm ==== $N"
-
-#   curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-#   VALIDATE $? "Downloading Helm install script"
-
-#   chmod 700 get_helm.sh
-#   ./get_helm.sh
-#   VALIDATE $? "Installing Helm"
-
-#   rm -f get_helm.sh
-# else
-#   echo -e "$G Helm already installed, skipping. $N"
-# fi
-
-#####################################
-# PATH fix
-#####################################
-if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
-  echo 'export PATH=$PATH:/usr/local/bin' >> ~/.bashrc
-  export PATH=$PATH:/usr/local/bin
-  echo -e "$G Added /usr/local/bin to PATH $N"
-fi
-
-#####################################
-# Final Check and Version Outputs
-#####################################
-echo -e "$G ==== All installations completed successfully! ==== $N"
-
-echo -e "$Y Docker Version: $N"
-docker --version || echo -e "$R Docker not available in this shell. Try re-logging. $N"
-
-echo -e "$Y eksctl Version: $N"
-eksctl version || echo -e "$R eksctl not found. $N"
-
-echo -e "$Y kubectl Version: $N"
-kubectl version --client || echo -e "$R kubectl not found. $N"
+# echo -e "$Y kubectl Version: $N"
+# kubectl version --client || echo -e "$R kubectl not found. $N"
 
 # echo -e "$Y kubens Version: $N"
 # kubens --help | head -n 2 || echo -e "$R kubens not found. $N"
