@@ -79,13 +79,23 @@ fi
 EKSCTL_LATEST=$(curl -s https://api.github.com/repos/eksctl-io/eksctl/releases/latest | grep tag_name | cut -d '"' -f4)
 VALIDATE $? "Fetching latest eksctl version"
 
+# Download to temp file
 curl -sL "https://github.com/eksctl-io/eksctl/releases/download/${EKSCTL_LATEST}/eksctl_Linux_${PLATFORM}.tar.gz" -o /tmp/eksctl.tar.gz
 VALIDATE $? "Downloading eksctl ${EKSCTL_LATEST}"
 
-tar -xzf /tmp/eksctl.tar.gz -C /tmp
+# Extract
+mkdir -p /tmp/eksctl-extract
+tar -xzf /tmp/eksctl.tar.gz -C /tmp/eksctl-extract
 VALIDATE $? "Extracting eksctl"
 
-mv /tmp/eksctl /usr/local/bin/eksctl
+# Find binary
+EKSCTL_BIN=$(find /tmp/eksctl-extract -type f -name eksctl | head -n1)
+if [ ! -f "$EKSCTL_BIN" ]; then
+  echo -e "$R eksctl binary not found after extraction. $N"
+  exit 1
+fi
+
+mv "$EKSCTL_BIN" /usr/local/bin/eksctl
 chmod +x /usr/local/bin/eksctl
 VALIDATE $? "Installing eksctl"
 
